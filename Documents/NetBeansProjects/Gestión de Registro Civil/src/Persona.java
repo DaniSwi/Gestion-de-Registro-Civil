@@ -2,14 +2,18 @@ public class Persona {
     private int edad;
     private String nombre;
     private String rut;
-    private int vivo;
+    //private int vivo;
+    private Lugar lugarNacimiento;
+    private Fecha fechaNacimiento;
     // Donde nació?
     // Algun otro codigo?
 
-    public Persona(int edad, String nombre, String rut) {
+    public Persona(int edad, String nombre, String rut, Lugar lugarNacimiento, Fecha fechaNacimiento) {
         this.edad = edad;
         this.nombre = nombre;
         this.rut = rut;
+        this.lugarNacimiento = lugarNacimiento;
+        this.fechaNacimiento = fechaNacimiento;
     }
 
     public int getEdad() {

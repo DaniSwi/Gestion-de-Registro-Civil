@@ -1,4 +1,7 @@
 public class RegistroCivil {
-    private Persona;
-    private 
+    private Persona persona;
+    private Pasaporte pasaporte;
+ 
+    
+    
 }
