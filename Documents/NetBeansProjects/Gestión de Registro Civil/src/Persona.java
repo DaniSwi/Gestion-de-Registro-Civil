@@ -2,11 +2,8 @@ public class Persona {
     private int edad;
     private String nombre;
     private String rut;
-    //private int vivo;
     private Lugar lugarNacimiento;
     private Fecha fechaNacimiento;
-    // Donde nació?
-    // Algun otro codigo?
 
     public Persona(int edad, String nombre, String rut, Lugar lugarNacimiento, Fecha fechaNacimiento) {
         this.edad = edad;
@@ -40,6 +37,8 @@ public class Persona {
         this.rut = rut;
     }
     
-  
+    public void presentarse(){
+        System.out.println("Hola me llamo " + this.nombre + ", tengo " + this.edad + " años, naci en " + lugarNacimiento.mostrarLugar());
+    }
     
 }
