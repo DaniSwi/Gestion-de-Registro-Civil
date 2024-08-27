@@ -1,3 +1,6 @@
+import java.util.*;
+import java.io.*;
+
 public class Persona {
     private int edad;
     private String nombre;

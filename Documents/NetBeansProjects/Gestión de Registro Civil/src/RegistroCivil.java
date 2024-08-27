@@ -27,13 +27,68 @@ public class RegistroCivil {
             }
         }
     }
-    
     public static void manejarMapa(HashMap mapa, ArrayList list){
         for(int i=0; i<list.size(); ++i){
             Persona persona = (Persona)list.get(i);
             mapa.put(persona.getEdad(), persona);
         }
     }
+    public static void agregarPersona(ArrayList personas) throws IOException{
+        BufferedReader reader = new BufferedReader(new InputStreamReader(System.in));
+        System.out.println("Ingrese nombre de la persona: ");
+        String nombre = reader.readLine();
+        System.out.println("Ingrese edad de la persona: ");
+        int edad = Integer.parseInt(reader.readLine());
+        System.out.println("Ingrese el rut de la persona: ");
+        String rut = reader.readLine();
+        System.out.println("Ingrese fecha de nacimiento de la persona.");
+        System.out.println("Primero día de nacimiento: ");
+        int dia = Integer.parseInt(reader.readLine());
+        System.out.println("Mes de nacimiento: ");
+        int mes = Integer.parseInt(reader.readLine());
+        System.out.println("Año de nacimiento: ");
+        int año = Integer.parseInt(reader.readLine());
+        Fecha fecha = new Fecha(dia, mes, año);
+        System.out.println("Ingrese lugar de nacimiento de la persona.");
+        System.out.println("Primero ciudad de nacimiento: ");
+        String ciudad = reader.readLine();
+        System.out.println("Comuna de nacimiento: ");
+        String comuna = reader.readLine();
+        System.out.println("Región de nacimiento: ");
+        String region = reader.readLine();
+        Lugar lugar = new Lugar(ciudad, comuna, region);
+        
+        Persona persona = new Persona(edad, nombre, rut, lugar, fecha);
+        personas.add(persona);
+        System.out.println("Persona " + persona.getNombre() + " agregada correctamente!");
+        
+        reader.close();
+    }
+    
+    
+    public static void mostrarMenu(ArrayList personas, ArrayList listaPersonasMenores, ArrayList listaPersonasMayores, ArrayList listaAdMayores) throws IOException{
+        int opcion;
+        do {
+            System.out.println("---------------------------------");
+            System.out.println("        MENÚ DE OPCIONES");
+            System.out.println("---------------------------------");
+            System.out.println("1) Agregar personas a la lista ");
+            System.out.println("2) Ver lista de personas por edad");
+            
+            BufferedReader reader = new BufferedReader(new InputStreamReader(System.in));
+            opcion = Integer.parseInt(reader.readLine());
+            
+            if(opcion == 1){
+                agregarPersona(personas);
+            } else if(opcion == 2){
+                System.out.println("Estamos trabajando para usted :vv");
+            } else if(opcion == 3) {
+                System.out.println("Saliendo del menú. . .");
+            }
+            
+        } while(opcion != 3);
+        
+    } 
     
     public static void main(String args[]) throws IOException {
         HashMap mapaPersonasPorEdad = new HashMap();
@@ -56,20 +111,15 @@ public class RegistroCivil {
         System.out.println("AdMayores");
         mostrarLista(listaPersonasAdultosMayores);
         
+        manejarMapa(mapaPersonasPorEdad, personas);
+        
+        mostrarMenu(personas, listaPersonasMenoresEdad, listaPersonasMayoresEdad,listaPersonasAdultosMayores);
+        
+        
+       // BufferedReader lector = new BufferedReader(new InputStreamReader(System.in));
         
         
         //p1.presentarse();
-        
-        /*
-        int edad = p1.getEdad();
-        if(edad < 18){
-            listaPersonasMenoresEdad.add(p1);
-        } else if(edad >= 18){
-            listaPersonasMayoresEdad.add(p1);
-        } else {
-            listaPersonasAdultosMayores.add(p1);
-        }
-        */
-    }
 
+    }
 }
