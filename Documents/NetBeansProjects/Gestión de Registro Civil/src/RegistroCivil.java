@@ -61,11 +61,8 @@ public class RegistroCivil {
         Persona persona = new Persona(edad, nombre, rut, lugar, fecha);
         personas.add(persona);
         System.out.println("Persona " + persona.getNombre() + " agregada correctamente!");
-        
-        reader.close();
     }
-    
-    
+
     public static void mostrarMenu(ArrayList personas, ArrayList listaPersonasMenores, ArrayList listaPersonasMayores, ArrayList listaAdMayores) throws IOException{
         int opcion;
         do {
@@ -74,6 +71,8 @@ public class RegistroCivil {
             System.out.println("---------------------------------");
             System.out.println("1) Agregar personas a la lista ");
             System.out.println("2) Ver lista de personas por edad");
+            System.out.println("3) Cargar archivo CSV de personas");
+            System.out.println("4) Salir del menú");
             
             BufferedReader reader = new BufferedReader(new InputStreamReader(System.in));
             opcion = Integer.parseInt(reader.readLine());
@@ -83,12 +82,42 @@ public class RegistroCivil {
             } else if(opcion == 2){
                 System.out.println("Estamos trabajando para usted :vv");
             } else if(opcion == 3) {
+                leerCSV(personas);
+            } else if(opcion == 4){
                 System.out.println("Saliendo del menú. . .");
+                reader.close();
+            } else {
+                System.out.println("Opción no válida, ingrese nuevamente.");
             }
             
-        } while(opcion != 3);
+        } while(opcion != 4);
         
     } 
+    
+    public static void leerCSV(ArrayList personas) throws IOException{
+        try(BufferedReader reader = new BufferedReader(new FileReader("C:\\Users\\PC RST GALAX\\Documents\\NetBeansProjects\\Gestión de Registro Civil\\build\\classes\\file.csv"))){
+            System.out.println("Cargando archivo CSV. . .");
+            String linea;
+            while((linea = reader.readLine()) != null){
+                String[] datos = linea.split(";");
+                int edad = Integer.parseInt(datos[0]);
+                String nombre = datos[1];
+                String rut = datos[2];
+                String ciudad = datos[3];
+                String comuna = datos[4];
+                String region = datos[5];
+                int dia = Integer.parseInt(datos[6]);
+                int mes = Integer.parseInt(datos[7]);
+                int año = Integer.parseInt(datos[8]);
+                Lugar lugar = new Lugar(ciudad, comuna, region);
+                Fecha fecha = new Fecha(dia, mes, año);
+                Persona persona = new Persona(edad, nombre, rut, lugar, fecha);
+                personas.add(persona);
+                System.out.println("Persona " + persona.getNombre() + " cargada correctamente al sistema ");
+            }
+        }
+        
+    }
     
     public static void main(String args[]) throws IOException {
         HashMap mapaPersonasPorEdad = new HashMap();
@@ -113,7 +142,8 @@ public class RegistroCivil {
         
         manejarMapa(mapaPersonasPorEdad, personas);
         
-        mostrarMenu(personas, listaPersonasMenoresEdad, listaPersonasMayoresEdad,listaPersonasAdultosMayores);
+        mostrarMenu(personas, listaPersonasMenoresEdad, listaPersonasMayoresEdad, listaPersonasAdultosMayores);
+        
         
         
        // BufferedReader lector = new BufferedReader(new InputStreamReader(System.in));

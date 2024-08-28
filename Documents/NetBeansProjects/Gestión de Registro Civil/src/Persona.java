@@ -44,4 +44,7 @@ public class Persona {
         System.out.println("Hola me llamo " + this.nombre + ", tengo " + this.edad + " años, naci en " + lugarNacimiento.mostrarLugar());
     }
     
+    public boolean esMayorEdad(){
+        return this.edad >= 18;
+    }    
 }
