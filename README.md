@@ -1,3 +1,4 @@
-"# Gestion-de-Registro-Civil" 
+# Proyecto ICI2241
+## Gestión de registro civil
+## Realizado por Daniel Cornejo, Benjamín Soto y Diego Zúñiga
 
-Hola hay que hacer el readme lollkolololol
