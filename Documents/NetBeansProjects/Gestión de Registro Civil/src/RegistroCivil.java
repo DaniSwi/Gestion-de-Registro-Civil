@@ -121,6 +121,7 @@ public class RegistroCivil {
     
     public static void main(String args[]) throws IOException {
         
+        System.out.println("asodsdof");
         HashMap mapaPersonasPorEdad = new HashMap();
         ArrayList listaPersonasMenoresEdad = new ArrayList();
         ArrayList listaPersonasMayoresEdad = new ArrayList();
