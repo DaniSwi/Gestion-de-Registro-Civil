@@ -70,7 +70,7 @@ public class RegistroCivil {
             System.out.println("        MENÚ DE OPCIONES");
             System.out.println("---------------------------------");
             System.out.println("1) Agregar personas a la lista ");
-            System.out.println("2) Ver lista de personas por edad");
+            System.out.println("2) Ver lista de personas");
             System.out.println("3) Cargar archivo CSV de personas");
             System.out.println("4) Salir del menú");
             
@@ -80,7 +80,7 @@ public class RegistroCivil {
             if(opcion == 1){
                 agregarPersona(personas);
             } else if(opcion == 2){
-                System.out.println("Estamos trabajando para usted :vv");
+                mostrarLista(personas);
             } else if(opcion == 3) {
                 leerCSV(personas);
             } else if(opcion == 4){
@@ -95,7 +95,7 @@ public class RegistroCivil {
     } 
     
     public static void leerCSV(ArrayList personas) throws IOException{
-        try(BufferedReader reader = new BufferedReader(new FileReader("C:\\Users\\PC RST GALAX\\Documents\\NetBeansProjects\\Gestión de Registro Civil\\build\\classes\\file.csv"))){
+        try(BufferedReader reader = new BufferedReader(new FileReader("C:\\Users\\PC RST GALAX\\Documents\\NetBeansProjects\\Gestión de Registro Civil\\build\\classes\\datos3"))){
             System.out.println("Cargando archivo CSV. . .");
             String linea;
             while((linea = reader.readLine()) != null){
@@ -116,7 +116,6 @@ public class RegistroCivil {
                 System.out.println("Persona " + persona.getNombre() + " cargada correctamente al sistema ");
             }
         }
-        
     }
     
     public static void main(String args[]) throws IOException {
@@ -129,16 +128,16 @@ public class RegistroCivil {
         
         ArrayList personas = new ArrayList();
         registrarPersonas(personas);
-        mostrarLista(personas);
+        //mostrarLista(personas);
         
         manejarListasEdades(listaPersonasMenoresEdad, listaPersonasMayoresEdad, listaPersonasAdultosMayores, personas);
         
-        System.out.println("Aca van las listas, menores");
+        /*System.out.println("Aca van las listas, menores");
         mostrarLista(listaPersonasMenoresEdad);
         System.out.println("Mayores");
         mostrarLista(listaPersonasMayoresEdad);
         System.out.println("AdMayores");
-        mostrarLista(listaPersonasAdultosMayores);
+        mostrarLista(listaPersonasAdultosMayores); */
         
         manejarMapa(mapaPersonasPorEdad, personas);
         
