@@ -1,39 +1,56 @@
 import java.util.*;
 import java.io.*;
+//import javax.swing.*;
 
 public class RegistroCivil {
-    public static void registrarPersonas(ArrayList personas){
+ //private JFrame mainFrame;
+    private ArrayList personas = new ArrayList();
+    private ArrayList personasMenoresEdad = new ArrayList();
+    private ArrayList personasMayoresEdad = new ArrayList();
+    private ArrayList personasAdultosMayores = new ArrayList();
+    private HashMap mapaPersonasPorEdad = new HashMap();
+    
+    public void registrarPersonas(){   //Con el random para el relleno de datos del SIA avance.
         Random random = new Random();
         for(int i=0;i<20;++i){
             Persona persona = new Persona(random.nextInt(100), "Test", "6.666.666-6", new Lugar("TestCiudad", "TestComuna", "TestRegión"), new Fecha(10, 10, 2010));
             personas.add(persona);
         }
     } 
-    public static void mostrarLista(ArrayList lista){
-        for(int i=0; i<lista.size(); ++i){
-            Persona persona = (Persona)lista.get(i);
+    public void mostrarLista(){   //Muestra la lista de personas en general.
+        for(int i=0; i<this.personas.size(); ++i){
+            Persona persona = (Persona)personas.get(i);
             persona.presentarse();
         }
     }
-    public static void manejarListasEdades(ArrayList menores, ArrayList mayores, ArrayList adMayores, ArrayList personas) {
+    
+    public void manejarListasEdades() {
         for(int i=0; i<personas.size(); ++i){
             Persona persona = (Persona)personas.get(i);
             if(persona.getEdad() < 18){
-                menores.add(persona);
+                personasMenoresEdad.add(persona);
             } else if(persona.getEdad() >= 18 && persona.getEdad() < 65){
-                mayores.add(persona);
+                personasMayoresEdad.add(persona);
             } else {
-                adMayores.add(persona);
+                personasAdultosMayores.add(persona);
             }
         }
     }
-    public static void manejarMapa(HashMap mapa, ArrayList list){
-        for(int i=0; i<list.size(); ++i){
-            Persona persona = (Persona)list.get(i);
-            mapa.put(persona.getEdad(), persona);
+    public void manejarMapa(){
+        for(int i=0; i<personas.size(); ++i){
+            Persona persona = (Persona)personas.get(i);
+            if(mapaPersonasPorEdad.containsKey(persona.getEdad())){
+                ArrayList lista = (ArrayList)mapaPersonasPorEdad.get(persona.getEdad());
+                lista.add(persona);
+            } else {
+                ArrayList lista = new ArrayList();
+                lista.add(persona);
+                mapaPersonasPorEdad.put(persona.getEdad(), lista);
+            }
         }
     }
-    public static void agregarPersona(ArrayList personas) throws IOException{
+    
+    public void agregarPersona() throws IOException{
         BufferedReader reader = new BufferedReader(new InputStreamReader(System.in));
         System.out.println("Ingrese nombre de la persona: ");
         String nombre = reader.readLine();
@@ -62,8 +79,24 @@ public class RegistroCivil {
         personas.add(persona);
         System.out.println("Persona " + persona.getNombre() + " agregada correctamente!");
     }
-
-    public static void mostrarMenu(ArrayList personas, ArrayList listaPersonasMenores, ArrayList listaPersonasMayores, ArrayList listaAdMayores) throws IOException{
+    
+    public void buscarPorEdades() throws IOException {
+        BufferedReader reader = new BufferedReader(new InputStreamReader(System.in));
+        System.out.println("Ingrese una edad a buscar: ");
+        int edad = Integer.parseInt(reader.readLine());
+        if(mapaPersonasPorEdad.containsKey(edad)){
+            ArrayList lista = (ArrayList)mapaPersonasPorEdad.get(edad);
+            for(int i=0; i<lista.size(); ++i){
+                Persona persona = (Persona)lista.get(i);
+                persona.presentarse();
+            }
+        } else {
+            System.out.println("No se ha encontrado registro de personas con la edad solicitada");
+        }
+    }
+    
+    
+    public void mostrarMenu() throws IOException{
         int opcion;
         do {
             System.out.println("---------------------------------");
@@ -72,29 +105,28 @@ public class RegistroCivil {
             System.out.println("1) Agregar personas a la lista ");
             System.out.println("2) Ver lista de personas");
             System.out.println("3) Cargar archivo CSV de personas");
-            System.out.println("4) Salir del menú");
+            System.out.println("4) Buscar personas por edades");
+            System.out.println("5) Salir del menú");
             
             BufferedReader reader = new BufferedReader(new InputStreamReader(System.in));
             opcion = Integer.parseInt(reader.readLine());
             
-            if(opcion == 1){
-                agregarPersona(personas);
-            } else if(opcion == 2){
-                mostrarLista(personas);
-            } else if(opcion == 3) {
-                leerCSV(personas);
-            } else if(opcion == 4){
-                System.out.println("Saliendo del menú. . .");
-                reader.close();
-            } else {
-                System.out.println("Opción no válida, ingrese nuevamente.");
+            switch (opcion) {
+                case 1 -> agregarPersona();
+                case 2 -> mostrarLista();
+                case 3 -> leerCSV();
+                case 4 -> buscarPorEdades();
+                case 5 -> {
+                    System.out.println("Saliendo del menú. . .");
+                    reader.close();
+                }
+                default -> System.out.println("Opción no válida, ingrese nuevamente.");
             }
-            
-        } while(opcion != 4);
+        } while(opcion != 5);
         
     } 
     
-    public static void leerCSV(ArrayList personas) throws IOException{
+    public void leerCSV() throws IOException{
         try(BufferedReader reader = new BufferedReader(new FileReader("C:\\Users\\PC RST GALAX\\Documents\\NetBeansProjects\\Gestión de Registro Civil\\build\\classes\\datos3"))){
             System.out.println("Cargando archivo CSV. . .");
             String linea;
@@ -118,39 +150,19 @@ public class RegistroCivil {
         }
     }
     
-    public static void main(String args[]) throws IOException {
+    public static void main(String args[]) throws IOException{
         
-        System.out.println("asodsdof");
-        HashMap mapaPersonasPorEdad = new HashMap();
-        ArrayList listaPersonasMenoresEdad = new ArrayList();
-        ArrayList listaPersonasMayoresEdad = new ArrayList();
-        ArrayList listaPersonasAdultosMayores = new ArrayList();
-        //Persona p1 = new Persona(20, "Juan", "20.726.245-6", new Lugar("El Belloto", "Quilpué", "Valparaíso"), new Fecha(10, 8, 2004));
+        RegistroCivil regCivil = new RegistroCivil();
         
+        regCivil.registrarPersonas();
+        regCivil.manejarListasEdades();
+        regCivil.manejarMapa();
+        regCivil.mostrarMenu();
+
         
-        ArrayList personas = new ArrayList();
-        registrarPersonas(personas);
-        //mostrarLista(personas);
-        
-        manejarListasEdades(listaPersonasMenoresEdad, listaPersonasMayoresEdad, listaPersonasAdultosMayores, personas);
-        
-        /*System.out.println("Aca van las listas, menores");
-        mostrarLista(listaPersonasMenoresEdad);
-        System.out.println("Mayores");
-        mostrarLista(listaPersonasMayoresEdad);
-        System.out.println("AdMayores");
-        mostrarLista(listaPersonasAdultosMayores); */
-        
-        manejarMapa(mapaPersonasPorEdad, personas);
-        
-        mostrarMenu(personas, listaPersonasMenoresEdad, listaPersonasMayoresEdad, listaPersonasAdultosMayores);
-        
-        
-        
-       // BufferedReader lector = new BufferedReader(new InputStreamReader(System.in));
-        
-        
-        //p1.presentarse();
 
     }
+    
+    
+    
 }
