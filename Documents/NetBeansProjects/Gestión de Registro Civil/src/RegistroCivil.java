@@ -1,9 +1,14 @@
 import java.util.*;
 import java.io.*;
-//import javax.swing.*;
+import javafx.application.Application;
+import javafx.scene.Scene;
+import javafx.scene.control.*;
+import javafx.scene.layout.GridPane;
+import javafx.stage.Modality;
+import javafx.stage.Stage;
 
-public class RegistroCivil {
- //private JFrame mainFrame;
+public class RegistroCivil extends Application{
+
     private ArrayList personas = new ArrayList();
     private ArrayList personasMenoresEdad = new ArrayList();
     private ArrayList personasMayoresEdad = new ArrayList();
@@ -96,7 +101,7 @@ public class RegistroCivil {
     }
     
     
-    public void mostrarMenu() throws IOException{
+    public void mostrarMenuConsola() throws IOException{
         int opcion;
         do {
             System.out.println("---------------------------------");
@@ -127,7 +132,7 @@ public class RegistroCivil {
     } 
     
     public void leerCSV() throws IOException{
-        try(BufferedReader reader = new BufferedReader(new FileReader("C:\\Users\\PC RST GALAX\\Documents\\NetBeansProjects\\Gestión de Registro Civil\\build\\classes\\datos3"))){
+        try(BufferedReader reader = new BufferedReader(new FileReader("C:\\Users\\PC RST GALAX\\Documents\\NetBeansProjects\\Gestión de Registro Civil\\build\\classes\\datos.csv"))){
             System.out.println("Cargando archivo CSV. . .");
             String linea;
             while((linea = reader.readLine()) != null){
@@ -150,6 +155,109 @@ public class RegistroCivil {
         }
     }
     
+    private void abrirVentanaAgregarPersona() {
+        Stage addStage = new Stage();
+        addStage.setTitle("Agregar Persona");
+
+        Label nameLabel = new Label("Nombre:");
+        TextField nameField = new TextField();
+
+        Label ageLabel = new Label("Edad:");
+        TextField ageField = new TextField();
+
+        Label rutLabel = new Label("RUT:");
+        TextField rutField = new TextField();
+
+        Button saveButton = new Button("Guardar");
+        saveButton.setOnAction(e -> {
+            String nombre = nameField.getText();
+            int edad = Integer.parseInt(ageField.getText());
+            String rut = rutField.getText();
+
+            Fecha fecha = new Fecha(10, 10, 2010); // Valores de ejemplo
+            Lugar lugar = new Lugar("Ciudad", "Comuna", "Región"); // Valores de ejemplo
+
+            Persona persona = new Persona(edad, nombre, rut, lugar, fecha);
+            personas.add(persona);
+
+            Alert alert = new Alert(Alert.AlertType.INFORMATION);
+            alert.setTitle("Persona agregada");
+            alert.setHeaderText(null);
+            alert.setContentText("Persona agregada: " + nombre);
+            alert.showAndWait();
+
+            nameField.clear();
+            ageField.clear();
+            rutField.clear();
+        });
+
+        GridPane grid = new GridPane();
+        grid.setVgap(10);
+        grid.setHgap(10);
+        grid.add(nameLabel, 0, 0);
+        grid.add(nameField, 1, 0);
+        grid.add(ageLabel, 0, 1);
+        grid.add(ageField, 1, 1);
+        grid.add(rutLabel, 0, 2);
+        grid.add(rutField, 1, 2);
+        grid.add(saveButton, 1, 3);
+
+        Scene scene = new Scene(grid, 300, 200);
+        addStage.setScene(scene);
+        addStage.initModality(Modality.APPLICATION_MODAL);
+        addStage.setResizable(false);
+        addStage.centerOnScreen();
+        addStage.showAndWait();
+    }
+    
+    private void abrirVentanaVerPersonas() {
+        Stage viewStage = new Stage();
+        viewStage.setTitle("Lista de Personas");
+
+        TextArea textArea = new TextArea();
+        textArea.setEditable(false);
+
+        StringBuilder builder = new StringBuilder();
+        for (int i=0; i<personas.size(); ++i) {
+            Persona persona = (Persona)personas.get(i);
+            builder.append(persona.getNombre()).append(" - ").append(persona.getEdad()).append(" años\n");
+        }
+
+        textArea.setText(builder.toString());
+
+        Scene scene = new Scene(textArea, 300, 200);
+        viewStage.setScene(scene);
+        viewStage.initModality(Modality.APPLICATION_MODAL);
+        viewStage.setResizable(false);
+        viewStage.centerOnScreen();
+        viewStage.showAndWait();
+    }
+    
+  public void start(Stage primaryStage) {
+        primaryStage.setTitle("Gestión de Registro Civil");
+
+        Button addButton = new Button("Agregar Persona");
+        Button viewButton = new Button("Ver Lista de Personas");
+        Button exitButton = new Button("Salir");
+
+        addButton.setOnAction(e -> abrirVentanaAgregarPersona());
+        viewButton.setOnAction(e -> abrirVentanaVerPersonas());
+        exitButton.setOnAction(e -> primaryStage.close());
+
+        GridPane grid = new GridPane();
+        grid.setVgap(10);
+        grid.setHgap(10);
+        grid.add(addButton, 0, 0);
+        grid.add(viewButton, 1, 0);
+        grid.add(exitButton, 2, 0);
+
+        Scene scene = new Scene(grid, 400, 200);
+        primaryStage.setScene(scene);
+        primaryStage.setResizable(false);
+        primaryStage.centerOnScreen();
+        primaryStage.show();
+    }
+    
     public static void main(String args[]) throws IOException{
         
         RegistroCivil regCivil = new RegistroCivil();
@@ -157,8 +265,9 @@ public class RegistroCivil {
         regCivil.registrarPersonas();
         regCivil.manejarListasEdades();
         regCivil.manejarMapa();
-        regCivil.mostrarMenu();
-
+        regCivil.mostrarMenuConsola();
+        
+        launch(args);
         
 
     }
