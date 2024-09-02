@@ -211,29 +211,30 @@ public class RegistroCivil extends Application{
     }
     
     private void abrirVentanaVerPersonas() {
-        Stage viewStage = new Stage();
-        viewStage.setTitle("Lista de Personas");
+    Stage viewStage = new Stage();
+    viewStage.setTitle("Lista de Personas");
 
-        TextArea textArea = new TextArea();
-        textArea.setEditable(false);
+    TextArea textArea = new TextArea();
+    textArea.setEditable(false);
 
-        StringBuilder builder = new StringBuilder();
-        for (int i=0; i<personas.size(); ++i) {
-            Persona persona = (Persona)personas.get(i);
-            builder.append(persona.getNombre()).append(" - ").append(persona.getEdad()).append(" años\n");
-        }
-
-        textArea.setText(builder.toString());
-
-        Scene scene = new Scene(textArea, 300, 200);
-        viewStage.setScene(scene);
-        viewStage.initModality(Modality.APPLICATION_MODAL);
-        viewStage.setResizable(false);
-        viewStage.centerOnScreen();
-        viewStage.showAndWait();
+    StringBuilder builder = new StringBuilder();
+    for (int i=0; i<this.personas.size(); ++i) {
+        Persona persona = (Persona)this.personas.get(i);
+        builder.append(persona.getNombre()).append(" - ").append(persona.getEdad()).append(" años\n");
     }
+
+    textArea.setText(builder.toString());
+
+    Scene scene = new Scene(textArea, 300, 200);
+    viewStage.setScene(scene);
+    viewStage.initModality(Modality.APPLICATION_MODAL);
+    viewStage.setResizable(false);
+    viewStage.centerOnScreen();
+    viewStage.showAndWait();
+}
     
   public void start(Stage primaryStage) {
+        registrarPersonas();
         primaryStage.setTitle("Gestión de Registro Civil");
 
         Button addButton = new Button("Agregar Persona");
@@ -271,7 +272,5 @@ public class RegistroCivil extends Application{
         
 
     }
-    
-    
     
 }
