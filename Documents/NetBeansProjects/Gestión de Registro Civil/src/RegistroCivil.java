@@ -167,15 +167,47 @@ public class RegistroCivil extends Application{
 
         Label rutLabel = new Label("RUT:");
         TextField rutField = new TextField();
+        
+        Label diaNacLabel = new Label("Día nacimiento:");
+        TextField diaNacField = new TextField();
+        
+        Label mesNacLabel = new Label("Mes nacimiento:");
+        TextField mesNacField = new TextField();
+        
+        Label añoNacLabel = new Label("Año nacimiento:");
+        TextField añoNacField = new TextField();
+        
+        Label ciudadNacLabel = new Label("Lugar de nacimiento:");
+        TextField ciudadNacField = new TextField();
+        
+        Label comunaNacLabel = new Label("Comuna de nacimiento:");
+        TextField comunaNacField = new TextField();
+        
+        Label regionNacLabel = new Label("Región de nacimiento:");
+        TextField regionNacField = new TextField();
 
         Button saveButton = new Button("Guardar");
         saveButton.setOnAction(e -> {
             String nombre = nameField.getText();
-            int edad = Integer.parseInt(ageField.getText());
             String rut = rutField.getText();
 
-            Fecha fecha = new Fecha(10, 10, 2010); // Valores de ejemplo
-            Lugar lugar = new Lugar("Ciudad", "Comuna", "Región"); // Valores de ejemplo
+            try {
+            int edad = Integer.parseInt(ageField.getText());
+            int dia = Integer.parseInt(diaNacField.getText());
+            int mes = Integer.parseInt(mesNacField.getText());
+            int año = Integer.parseInt(añoNacField.getText());
+            
+            if (dia < 1 || dia > 31 || mes < 1 || mes > 12 || año < 1900 || año > 2024) {
+                throw new NumberFormatException("Fecha no válida");
+            }
+            
+            Fecha fecha = new Fecha(dia, mes, año);
+            
+            String ciudad = ciudadNacField.getText();
+            String comuna = comunaNacField.getText();
+            String region = regionNacField.getText();
+            
+            Lugar lugar = new Lugar(ciudad, comuna, region);
 
             Persona persona = new Persona(edad, nombre, rut, lugar, fecha);
             personas.add(persona);
@@ -189,7 +221,20 @@ public class RegistroCivil extends Application{
             nameField.clear();
             ageField.clear();
             rutField.clear();
-        });
+            diaNacField.clear();
+            mesNacField.clear();
+            añoNacField.clear();
+            ciudadNacField.clear();
+            comunaNacField.clear();
+            regionNacField.clear();
+        } catch (NumberFormatException ex) {
+            Alert errorAlert = new Alert(Alert.AlertType.ERROR);
+            errorAlert.setTitle("Error de entrada");
+            errorAlert.setHeaderText(null);
+            errorAlert.setContentText("ERROR: Ingreso de un texto en un campo de números");
+            errorAlert.showAndWait();
+        }
+    });
 
         GridPane grid = new GridPane();
         grid.setVgap(10);
@@ -200,9 +245,21 @@ public class RegistroCivil extends Application{
         grid.add(ageField, 1, 1);
         grid.add(rutLabel, 0, 2);
         grid.add(rutField, 1, 2);
-        grid.add(saveButton, 1, 3);
+        grid.add(diaNacLabel, 0, 3);
+        grid.add(diaNacField, 1, 3);
+        grid.add(mesNacLabel, 0, 4);
+        grid.add(mesNacField, 1, 4);
+        grid.add(añoNacLabel, 0, 5);
+        grid.add(añoNacField, 1, 5);
+        grid.add(ciudadNacLabel, 0, 6);
+        grid.add(ciudadNacField, 1, 6);
+        grid.add(comunaNacLabel, 0, 7);
+        grid.add(comunaNacField, 1, 7);
+        grid.add(regionNacLabel, 0, 8);
+        grid.add(regionNacField, 1, 8);
+        grid.add(saveButton, 1, 9);
 
-        Scene scene = new Scene(grid, 300, 200);
+        Scene scene = new Scene(grid, 600, 600);
         addStage.setScene(scene);
         addStage.initModality(Modality.APPLICATION_MODAL);
         addStage.setResizable(false);
@@ -232,17 +289,28 @@ public class RegistroCivil extends Application{
     viewStage.centerOnScreen();
     viewStage.showAndWait();
 }
+    public void abrirVentanaEliminarPersona(){
+        Stage eliminarStage = new Stage();
+        eliminarStage.setTitle("Eliminar a una persona de la lista");
+        
+        Label nameLabel = new Label("Nombre: ");
+        TextField  nameField = new TextField();
+        Button saveButton = new Button("Guardar");
+        
+    }
     
-  public void start(Stage primaryStage) {
+    public void start(Stage primaryStage) {
         registrarPersonas();
         primaryStage.setTitle("Gestión de Registro Civil");
 
         Button addButton = new Button("Agregar Persona");
         Button viewButton = new Button("Ver Lista de Personas");
+        Button deleteButton = new Button("Eliminar a una persona");
         Button exitButton = new Button("Salir");
 
         addButton.setOnAction(e -> abrirVentanaAgregarPersona());
         viewButton.setOnAction(e -> abrirVentanaVerPersonas());
+        deleteButton.setOnAction(e -> abrirVentanaEliminarPersona());
         exitButton.setOnAction(e -> primaryStage.close());
 
         GridPane grid = new GridPane();
