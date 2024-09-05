@@ -139,11 +139,11 @@ public class RegistroCivil extends Application{
     } 
     
     public void leerCSV() throws IOException{
-        try(BufferedReader reader = new BufferedReader(new FileReader("C:\\Users\\PC RST GALAX\\Documents\\NetBeansProjects\\Gestión de Registro Civil\\build\\classes\\datos.csv"))){
+        try(BufferedReader reader = new BufferedReader(new FileReader("datos.csv"))){
             System.out.println("Cargando archivo CSV. . .");
             String linea;
             while((linea = reader.readLine()) != null){
-                String[] datos = linea.split(";");
+                String[] datos = linea.split(",");
                 int edad = Integer.parseInt(datos[0]);
                 String nombre = datos[1];
                 String rut = datos[2];
