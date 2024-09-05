@@ -14,6 +14,7 @@ public class RegistroCivil extends Application{
     private ArrayList personasMayoresEdad = new ArrayList();
     private ArrayList personasAdultosMayores = new ArrayList();
     private HashMap mapaPersonasPorEdad = new HashMap();
+    private HashMap mapaPersonasPorRut = new HashMap();
     
     public void registrarPersonas(){   //Con el random para el relleno de datos del SIA avance.
         Random random = new Random();
@@ -22,6 +23,7 @@ public class RegistroCivil extends Application{
             personas.add(persona);
         }
     } 
+    
     public void mostrarLista(){   //Muestra la lista de personas en general.
         for(int i=0; i<this.personas.size(); ++i){
             Persona persona = (Persona)personas.get(i);
@@ -41,7 +43,7 @@ public class RegistroCivil extends Application{
             }
         }
     }
-    public void manejarMapa(){
+    public void manejarMapas(){
         for(int i=0; i<personas.size(); ++i){
             Persona persona = (Persona)personas.get(i);
             if(mapaPersonasPorEdad.containsKey(persona.getEdad())){
@@ -51,6 +53,11 @@ public class RegistroCivil extends Application{
                 ArrayList lista = new ArrayList();
                 lista.add(persona);
                 mapaPersonasPorEdad.put(persona.getEdad(), lista);
+            }
+            if(mapaPersonasPorRut.containsKey(persona.getRut())){
+                System.out.println("Persona ya ingresa en el sistema!");
+            } else {
+                mapaPersonasPorRut.put(persona.getRut(), persona);
             }
         }
     }
@@ -282,7 +289,7 @@ public class RegistroCivil extends Application{
 
     textArea.setText(builder.toString());
 
-    Scene scene = new Scene(textArea, 300, 200);
+    Scene scene = new Scene(textArea, 600, 600);
     viewStage.setScene(scene);
     viewStage.initModality(Modality.APPLICATION_MODAL);
     viewStage.setResizable(false);
@@ -293,10 +300,32 @@ public class RegistroCivil extends Application{
         Stage eliminarStage = new Stage();
         eliminarStage.setTitle("Eliminar a una persona de la lista");
         
-        Label nameLabel = new Label("Nombre: ");
-        TextField  nameField = new TextField();
+        Label rutLabel = new Label("Rut: ");
+        TextField  rutField = new TextField();
         Button saveButton = new Button("Guardar");
-        
+         saveButton.setOnAction(e -> {
+            String rut = rutField.getText();
+            if(mapaPersonasPorRut.containsKey(rut)){
+                mapaPersonasPorRut.remove(rut);
+                Alert alert = new Alert(Alert.AlertType.INFORMATION);
+                alert.setTitle("Persona eliminada");
+                alert.setHeaderText(null);
+                alert.setContentText("Persona con RUT: " + rut + "eliminada exitosamente del sistema");
+                alert.showAndWait();
+            }
+        });
+        GridPane grid = new GridPane();
+        grid.setVgap(10);
+        grid.setHgap(10);
+        grid.add(rutLabel, 0, 0);
+        grid.add(rutField, 1, 0);
+        grid.add(saveButton, 1, 2);
+        Scene scene = new Scene(grid, 600, 600);
+        eliminarStage.setScene(scene);
+        eliminarStage.initModality(Modality.APPLICATION_MODAL);
+        eliminarStage.setResizable(false);
+        eliminarStage.centerOnScreen();
+        eliminarStage.showAndWait();
     }
     
     public void start(Stage primaryStage) {
@@ -318,23 +347,38 @@ public class RegistroCivil extends Application{
         grid.setHgap(10);
         grid.add(addButton, 0, 0);
         grid.add(viewButton, 1, 0);
-        grid.add(exitButton, 2, 0);
+        grid.add(deleteButton, 2, 0);
+        grid.add(exitButton, 3, 0);
 
-        Scene scene = new Scene(grid, 400, 200);
+        Scene scene = new Scene(grid, 600, 200);
         primaryStage.setScene(scene);
         primaryStage.setResizable(false);
         primaryStage.centerOnScreen();
         primaryStage.show();
     }
     
+    /* public void excear(Excel excel) {
+        try {
+            excel.escribirExcel(personas);
+            System.out.println("Datos escritos en el archivo exitosamente.");
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
+    } */
+    
     public static void main(String args[]) throws IOException{
         
         RegistroCivil regCivil = new RegistroCivil();
         
+      // Excel excel = new Excel("C:\\Users\\PC RST GALAX\\Documents\\NetBeansProjects\\Gestión de Registro Civil\\build\\classes\\excel.xlsx");
+        
         regCivil.registrarPersonas();
         regCivil.manejarListasEdades();
-        regCivil.manejarMapa();
+        regCivil.manejarMapas();
         regCivil.mostrarMenuConsola();
+        
+       // regCivil.excear(excel);
+        
         
         launch(args);
         
