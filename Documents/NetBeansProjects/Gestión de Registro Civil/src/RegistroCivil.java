@@ -7,6 +7,11 @@ import javafx.scene.layout.GridPane;
 import javafx.stage.Modality;
 import javafx.stage.Stage;
 
+/*
+Por favor, antes de ejecutar el programa asegúrese de que las librerías con los archivos de JavaFX y Apache POI estén en su IDE.
+Las carpetas las puede encontrar en este mismo archivo, así que no debe descargar nada.
+*/
+
 public class RegistroCivil extends Application{
 
     private ArrayList personas = new ArrayList();
@@ -98,7 +103,7 @@ public class RegistroCivil extends Application{
         }
     }
     
-    public void agregarPersona() throws IOException{
+    public void agregarPersona() throws IOException{ // Agrega persona a la lista de personas del sistema.
         BufferedReader reader = new BufferedReader(new InputStreamReader(System.in));
         System.out.println("Ingrese nombre de la persona: ");
         String nombre = reader.readLine();
@@ -128,7 +133,7 @@ public class RegistroCivil extends Application{
         System.out.println("Persona " + persona.getNombre() + " agregada correctamente!");
     }
     
-    public void buscarPorEdades() throws IOException {
+    public void buscarPorEdades() throws IOException { //Busca en el sistema personas con la edad solicitada.
         BufferedReader reader = new BufferedReader(new InputStreamReader(System.in));
         System.out.println("Ingrese una edad a buscar: ");
         int edad = Integer.parseInt(reader.readLine());
@@ -143,7 +148,7 @@ public class RegistroCivil extends Application{
         }
     }
     
-    public void buscarPorRut() throws IOException {
+    public void buscarPorRut() throws IOException { //Busca en el sistema a la persona con rut dado.
         BufferedReader reader = new BufferedReader(new InputStreamReader(System.in));
         System.out.println("Ingrese RUT para buscar: ");
         String rut = reader.readLine();
@@ -155,7 +160,7 @@ public class RegistroCivil extends Application{
         }
     }
     
-    public Boolean estaPersonaEnLista(String rut) {
+    public Boolean estaPersonaEnLista(String rut) { //Revisa si existe la persona en el sistema con el rut ingresado.
         for(int i=0; i<personas.size(); ++i){
             Persona persona = (Persona)personas.get(i);
             if(persona.getRut().equals(rut)){
@@ -165,7 +170,7 @@ public class RegistroCivil extends Application{
         return false;
     }
     
-    public void eliminarPersona() throws IOException {
+    public void eliminarPersona() throws IOException { //Elimina a la persona con el rut ingresado de todo el sistema.
         BufferedReader reader = new BufferedReader(new InputStreamReader(System.in));
         System.out.println("Ingrese el RUT de la persona a eliminar: ");
         String rut = reader.readLine();
@@ -216,7 +221,7 @@ public class RegistroCivil extends Application{
         }
     }
     
-    public void leerCSV() throws IOException{
+    public void leerCSV() throws IOException{ //Lee el archivo CSV y lo ingresa a la lista del sistema.
         try(BufferedReader reader = new BufferedReader(new FileReader("datos.csv"))){
             System.out.println("Cargando archivo CSV. . .");
             String linea;
@@ -240,7 +245,7 @@ public class RegistroCivil extends Application{
         }
     }
     
-    public void cambiarNombrePersona() throws IOException{
+    public void cambiarNombrePersona() throws IOException{ //Se le modifica el nombre a una persona y lo cambia en todo el sistema.
         BufferedReader reader = new BufferedReader(new InputStreamReader(System.in));
         System.out.println("Ingrese el RUT de la persona a modificar el nombre: ");
         String rut = reader.readLine();
@@ -293,7 +298,7 @@ public class RegistroCivil extends Application{
         }
     }
     
-    public void mostrarMenuConsola() throws IOException{
+    public void mostrarMenuConsola() throws IOException{ //Muestra las opciones en consola.
         int opcion;
         do {
             System.out.println("---------------------------------");
@@ -327,7 +332,11 @@ public class RegistroCivil extends Application{
         
     } 
     
-    private void abrirVentanaAgregarPersona() {
+    /*
+    Funcionalidades de ventanas con JavaFX, por favor ingresar las librerías correspondientes para que funcione correctamente
+    */
+    
+    private void abrirVentanaAgregarPersona() { 
         Stage addStage = new Stage();
         addStage.setTitle("Agregar Persona");
 
@@ -386,7 +395,6 @@ public class RegistroCivil extends Application{
 
             Alert alert = new Alert(Alert.AlertType.INFORMATION);
             alert.setTitle("Persona agregada");
-            alert.setHeaderText(null);
             alert.setContentText("Persona agregada: " + nombre);
             alert.showAndWait();
 
@@ -463,14 +471,14 @@ public class RegistroCivil extends Application{
 }
     public void abrirVentanaEliminarPersona(){
         Stage eliminarStage = new Stage();
-        eliminarStage.setTitle("Eliminar a una persona de la lista");
+        eliminarStage.setTitle("Eliminar a una persona del sistema");
         
         Label rutLabel = new Label("Rut: ");
         TextField  rutField = new TextField();
         Button saveButton = new Button("Guardar");
          saveButton.setOnAction(e -> {
             String rut = rutField.getText();
-            if(mapaPersonasPorRut.containsKey(rut)){
+            if(estaPersonaEnLista(rut)){
                 mapaPersonasPorRut.remove(rut);
                 Alert alert = new Alert(Alert.AlertType.INFORMATION);
                 alert.setTitle("Persona eliminada");
