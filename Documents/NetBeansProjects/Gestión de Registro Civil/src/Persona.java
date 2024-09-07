@@ -42,6 +42,14 @@ public class Persona {
         System.out.println("Hola me llamo " + this.nombre + ", tengo " + this.edad + " años, naci en " + lugarNacimiento.mostrarLugar());
     }
     
+    public void presentarse(int m) {
+        System.out.println("Hola me llamo "+ this.nombre + " y tengo "+ this.edad);
+    }
+    
+    public void presentarse(float f) {
+        System.out.println(nombre + edad + lugarNacimiento.getCiudad() + lugarNacimiento.getComuna() + lugarNacimiento.getRegion());
+    }
+    
     public boolean esMayorEdad(){
         return this.edad >= 18;
     }    
