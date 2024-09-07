@@ -7,7 +7,9 @@ import java.util.ArrayList;
 
 public class Excel {
     
-    public static void escribirExcel(ArrayList<Persona> personas, String archivo) {
+    private String archivo = "excel.xlsx";
+    
+    public void escribirExcel(ArrayList personas) {
         Workbook workbook = new XSSFWorkbook();
         Sheet sheet = workbook.createSheet("Personas");
 
@@ -23,7 +25,8 @@ public class Excel {
 
         // Llenar las filas con datos del ArrayList
         int rowNum = 1;
-        for (Persona persona : personas) {
+        for (int i=0; i<personas.size(); ++i) {
+            Persona persona = (Persona)personas.get(i);
             Row fila = sheet.createRow(rowNum++);
             fila.createCell(0).setCellValue(persona.getNombre());
             fila.createCell(1).setCellValue(persona.getEdad());
@@ -38,13 +41,5 @@ public class Excel {
         } catch (IOException e) {
             e.printStackTrace();
         }
-    }
-
-    public static void main(String[] args) {
-        ArrayList<Persona> personas = new ArrayList<>();
-        Persona persona = new Persona(50, "Test", "6.666.666-6", new Lugar("TestCiudad", "TestComuna", "TestRegión"), new Fecha(10, 10, 2010));
-        personas.add(persona);
-
-        escribirExcel(personas, "C:\\Users\\PC RST GALAX\\Downloads\\excel.xlsx");
     }
 }
