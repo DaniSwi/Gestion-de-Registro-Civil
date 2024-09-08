@@ -1,3 +1,4 @@
+
 import java.util.*;
 import java.io.*;
 import javafx.application.Application;
@@ -10,9 +11,8 @@ import javafx.stage.Stage;
 /*
 Por favor, antes de ejecutar el programa asegúrese de que las librerías con los archivos de JavaFX y Apache POI estén en su IDE.
 Las carpetas las puede encontrar en este mismo archivo, así que no debe descargar nada.
-*/
-
-public class RegistroCivil extends Application{
+ */
+public class RegistroCivil extends Application {
 
     private ArrayList personas = new ArrayList();
     private ArrayList personasMenoresEdad = new ArrayList();
@@ -21,8 +21,8 @@ public class RegistroCivil extends Application{
     private HashMap mapaPersonasPorEdad = new HashMap();
     private HashMap mapaPersonasPorRut = new HashMap();
     private Excel archivoExcel = new Excel();
-    
-    public void registrarPersonas(){   
+
+    public void registrarPersonas() {
         Persona p1 = new Persona(99, "Sara", "23357956-1", new Lugar("Puerto Montt", "Ovalle", "Antofagasta"), new Fecha(9, 3, 1969));
         Persona p2 = new Persona(11, "Pedro", "5550575-0", new Lugar("Valparaíso", "Los Ángeles", "Arica y Parinacota"), new Fecha(21, 6, 1993));
         Persona p3 = new Persona(21, "Paula", "17262816-2", new Lugar("Puerto Montt", "Viña del Mar", "Araucanía"), new Fecha(12, 9, 1960));
@@ -63,47 +63,48 @@ public class RegistroCivil extends Application{
         personas.add(p18);
         personas.add(p19);
         personas.add(p20);
-    } 
-    
-    public void mostrarLista(){   //Muestra la lista de personas en general.
-        for(int i=0; i<this.personas.size(); ++i){
-            Persona persona = (Persona)personas.get(i);
+    }
+
+    public void mostrarLista() {   //Muestra la lista de personas en general.
+        for (int i = 0; i < this.personas.size(); ++i) {
+            Persona persona = (Persona) personas.get(i);
             persona.presentarse();
         }
     }
-    
+
     public void manejarListasEdades() { // Organiza las listas de personas clasificadas por edades.
-        for(int i=0; i<personas.size(); ++i){
-            Persona persona = (Persona)personas.get(i);
-            if(persona.getEdad() < 18){
+        for (int i = 0; i < personas.size(); ++i) {
+            Persona persona = (Persona) personas.get(i);
+            if (persona.getEdad() < 18) {
                 personasMenoresEdad.add(persona);
-            } else if(persona.getEdad() >= 18 && persona.getEdad() < 65){
+            } else if (persona.getEdad() >= 18 && persona.getEdad() < 65) {
                 personasMayoresEdad.add(persona);
             } else {
                 personasAdultosMayores.add(persona);
             }
         }
     }
-    public void manejarMapas(){ // Pobla los mapas con las claves correspondientes.
-        for(int i=0; i<personas.size(); ++i){
-            Persona persona = (Persona)personas.get(i);
-            if(mapaPersonasPorEdad.containsKey(persona.getEdad())){
-                ArrayList lista = (ArrayList)mapaPersonasPorEdad.get(persona.getEdad());
+
+    public void manejarMapas() { // Pobla los mapas con las claves correspondientes.
+        for (int i = 0; i < personas.size(); ++i) {
+            Persona persona = (Persona) personas.get(i);
+            if (mapaPersonasPorEdad.containsKey(persona.getEdad())) {
+                ArrayList lista = (ArrayList) mapaPersonasPorEdad.get(persona.getEdad());
                 lista.add(persona);
             } else {
                 ArrayList lista = new ArrayList();
                 lista.add(persona);
                 mapaPersonasPorEdad.put(persona.getEdad(), lista);
             }
-            if(mapaPersonasPorRut.containsKey(persona.getRut())){
+            if (mapaPersonasPorRut.containsKey(persona.getRut())) {
                 System.out.println("Persona ya ingresa en el sistema!");
             } else {
                 mapaPersonasPorRut.put(persona.getRut(), persona);
             }
         }
     }
-    
-    public void agregarPersona() throws IOException{ // Agrega persona a la lista de personas del sistema.
+
+    public void agregarPersona() throws IOException { // Agrega persona a la lista de personas del sistema.
         BufferedReader reader = new BufferedReader(new InputStreamReader(System.in));
         System.out.println("Ingrese nombre de la persona: ");
         String nombre = reader.readLine();
@@ -127,88 +128,90 @@ public class RegistroCivil extends Application{
         System.out.println("Región de nacimiento: ");
         String region = reader.readLine();
         Lugar lugar = new Lugar(ciudad, comuna, region);
-        
+
         Persona persona = new Persona(edad, nombre, rut, lugar, fecha);
         personas.add(persona);
         System.out.println("Persona " + persona.getNombre() + " agregada correctamente!");
     }
-    
+
     public void buscarPorEdades() throws IOException { //Busca en el sistema personas con la edad solicitada.
         BufferedReader reader = new BufferedReader(new InputStreamReader(System.in));
         System.out.println("Ingrese una edad a buscar: ");
         int edad = Integer.parseInt(reader.readLine());
-        if(mapaPersonasPorEdad.containsKey(edad)){
-            ArrayList lista = (ArrayList)mapaPersonasPorEdad.get(edad);
-            for(int i=0; i<lista.size(); ++i){
-                Persona persona = (Persona)lista.get(i);
+        if (mapaPersonasPorEdad.containsKey(edad)) {
+            ArrayList lista = (ArrayList) mapaPersonasPorEdad.get(edad);
+            for (int i = 0; i < lista.size(); ++i) {
+                Persona persona = (Persona) lista.get(i);
                 persona.presentarse();
             }
         } else {
             System.out.println("No se ha encontrado registro de personas con la edad solicitada");
         }
     }
-    
+
     public void buscarPorRut() throws IOException { //Busca en el sistema a la persona con rut dado.
         BufferedReader reader = new BufferedReader(new InputStreamReader(System.in));
         System.out.println("Ingrese RUT para buscar: ");
         String rut = reader.readLine();
-        if(mapaPersonasPorRut.containsKey(rut)){
-            Persona persona = (Persona)mapaPersonasPorRut.get(rut);
+        if (mapaPersonasPorRut.containsKey(rut)) {
+            Persona persona = (Persona) mapaPersonasPorRut.get(rut);
             persona.presentarse();
         } else {
             System.out.println("Persona no figura en el sistema!");
         }
     }
-    
+
     public Boolean estaPersonaEnLista(String rut) { //Revisa si existe la persona en el sistema con el rut ingresado.
-        for(int i=0; i<personas.size(); ++i){
-            Persona persona = (Persona)personas.get(i);
-            if(persona.getRut().equals(rut)){
+        for (int i = 0; i < personas.size(); ++i) {
+            Persona persona = (Persona) personas.get(i);
+            if (persona.getRut().equals(rut)) {
                 return true;
             }
         }
         return false;
     }
-    
+
     public void eliminarPersona() throws IOException { //Elimina a la persona con el rut ingresado de todo el sistema.
         BufferedReader reader = new BufferedReader(new InputStreamReader(System.in));
         System.out.println("Ingrese el RUT de la persona a eliminar: ");
         String rut = reader.readLine();
-        if(estaPersonaEnLista(rut)){           //Si la persona está en la lista implica que también se agrego a los mapas
-            Persona persona = (Persona)mapaPersonasPorRut.get(rut);
-            ArrayList lista = (ArrayList)mapaPersonasPorEdad.get(persona.getEdad());
-            for(int i=0; i<lista.size(); ++i){
-                Persona person = (Persona)lista.get(i);
-                if(person.getRut().equals(rut)){
+        if (estaPersonaEnLista(rut)) {           //Si la persona está en la lista implica que también se agrego a los mapas
+            Persona persona = (Persona) mapaPersonasPorRut.get(rut);
+            ArrayList lista = (ArrayList) mapaPersonasPorEdad.get(persona.getEdad());
+            for (int i = 0; i < lista.size(); ++i) {
+                Persona person = (Persona) lista.get(i);
+                if (person.getRut().equals(rut)) {
                     lista.remove(i);
                     break;
                 }
-            } for(int j=0; j<personas.size(); ++j){
-                Persona person = (Persona)personas.get(j);
-                if(person.getRut().equals(rut)){
+            }
+            for (int j = 0; j < personas.size(); ++j) {
+                Persona person = (Persona) personas.get(j);
+                if (person.getRut().equals(rut)) {
                     personas.remove(j);
                     break;
                 }
-            } if(persona.getEdad() < 18){
-                for(int i=0; i<personasMenoresEdad.size(); ++i){
-                    Persona p = (Persona)personasMenoresEdad.get(i);
-                    if(p.getRut().equals(rut)){
+            }
+            if (persona.getEdad() < 18) {
+                for (int i = 0; i < personasMenoresEdad.size(); ++i) {
+                    Persona p = (Persona) personasMenoresEdad.get(i);
+                    if (p.getRut().equals(rut)) {
                         personasMenoresEdad.remove(i);
                         break;
                     }
                 }
-            } else if(persona.getEdad() < 65) {
-                for(int i=0; i<personasMayoresEdad.size(); ++i){
-                    Persona p = (Persona)personasMayoresEdad.get(i);
-                    if(p.getRut().equals(rut)){
+            } else if (persona.getEdad() < 65) {
+                for (int i = 0; i < personasMayoresEdad.size(); ++i) {
+                    Persona p = (Persona) personasMayoresEdad.get(i);
+                    if (p.getRut().equals(rut)) {
                         personasMayoresEdad.remove(i);
                         break;
                     }
                 }
             } else {
-                for(int i=0; i<personasAdultosMayores.size(); ++i){
-                    Persona p = (Persona)personasAdultosMayores.get(i);
-                    if(p.getRut().equals(rut)){
+                for (int i = 0; i < personasAdultosMayores.size(); ++i) {
+                    Persona p = (Persona) personasAdultosMayores.get(i);
+                    if (p.getRut().equals(rut)) {
                         personasAdultosMayores.remove(i);
                         break;
                     }
@@ -220,12 +223,12 @@ public class RegistroCivil extends Application{
             System.out.println("Persona no encontrada en el sistema!");
         }
     }
-    
-    public void leerCSV() throws IOException{ //Lee el archivo CSV y lo ingresa a la lista del sistema.
-        try(BufferedReader reader = new BufferedReader(new FileReader("datos.csv"))){
+
+    public void leerCSV() throws IOException { //Lee el archivo CSV y lo ingresa a la lista del sistema.
+        try (BufferedReader reader = new BufferedReader(new FileReader("datos.csv"))) {
             System.out.println("Cargando archivo CSV. . .");
             String linea;
-            while((linea = reader.readLine()) != null){
+            while ((linea = reader.readLine()) != null) {
                 String[] datos = linea.split(",");
                 int edad = Integer.parseInt(datos[0]);
                 String nombre = datos[1];
@@ -244,49 +247,51 @@ public class RegistroCivil extends Application{
             }
         }
     }
-    
-    public void cambiarNombrePersona() throws IOException{ //Se le modifica el nombre a una persona y lo cambia en todo el sistema.
+
+    public void cambiarNombrePersona() throws IOException { //Se le modifica el nombre a una persona y lo cambia en todo el sistema.
         BufferedReader reader = new BufferedReader(new InputStreamReader(System.in));
         System.out.println("Ingrese el RUT de la persona a modificar el nombre: ");
         String rut = reader.readLine();
-        if(estaPersonaEnLista(rut)){
+        if (estaPersonaEnLista(rut)) {
             System.out.println("Ingrese el nuevo nombre de la persona: ");
             String nombre = reader.readLine();
-            Persona persona = (Persona)mapaPersonasPorRut.get(rut);
+            Persona persona = (Persona) mapaPersonasPorRut.get(rut);
             persona.setNombre(nombre);
-            ArrayList lista = (ArrayList)mapaPersonasPorEdad.get(persona.getEdad());
-            for(int i=0; i<lista.size(); ++i){
-                Persona person = (Persona)lista.get(i);
-                if(person.getRut().equals(rut)){
+            ArrayList lista = (ArrayList) mapaPersonasPorEdad.get(persona.getEdad());
+            for (int i = 0; i < lista.size(); ++i) {
+                Persona person = (Persona) lista.get(i);
+                if (person.getRut().equals(rut)) {
                     person.setNombre(nombre);
                     break;
                 }
-            } for(int j=0; j<personas.size(); ++j){
-                Persona person = (Persona)personas.get(j);
-                if(person.getRut().equals(rut)){
+            }
+            for (int j = 0; j < personas.size(); ++j) {
+                Persona person = (Persona) personas.get(j);
+                if (person.getRut().equals(rut)) {
                     person.setNombre(nombre);
                     break;
                 }
-            } if(persona.getEdad() < 18){
-                for(int i=0; i<personasMenoresEdad.size(); ++i){
-                    Persona p = (Persona)personasMenoresEdad.get(i);
-                    if(p.getRut().equals(rut)){
+            }
+            if (persona.getEdad() < 18) {
+                for (int i = 0; i < personasMenoresEdad.size(); ++i) {
+                    Persona p = (Persona) personasMenoresEdad.get(i);
+                    if (p.getRut().equals(rut)) {
                         p.setNombre(nombre);
                         break;
                     }
                 }
-            } else if(persona.getEdad() < 65) {
-                for(int i=0; i<personasMayoresEdad.size(); ++i){
-                    Persona p = (Persona)personasMayoresEdad.get(i);
-                    if(p.getRut().equals(rut)){
+            } else if (persona.getEdad() < 65) {
+                for (int i = 0; i < personasMayoresEdad.size(); ++i) {
+                    Persona p = (Persona) personasMayoresEdad.get(i);
+                    if (p.getRut().equals(rut)) {
                         p.setNombre(nombre);
                         break;
                     }
                 }
             } else {
-                for(int i=0; i<personasAdultosMayores.size(); ++i){
-                    Persona p = (Persona)personasAdultosMayores.get(i);
-                    if(p.getRut().equals(rut)){
+                for (int i = 0; i < personasAdultosMayores.size(); ++i) {
+                    Persona p = (Persona) personasAdultosMayores.get(i);
+                    if (p.getRut().equals(rut)) {
                         p.setNombre(nombre);
                         break;
                     }
@@ -297,46 +302,55 @@ public class RegistroCivil extends Application{
             System.out.println("Persona no encontrada en el sistema!");
         }
     }
-    
-    public void mostrarMenuConsola() throws IOException{ //Muestra las opciones en consola.
+
+    public void mostrarMenuConsola() throws IOException { //Muestra las opciones en consola.
         int opcion;
-        do {
-            System.out.println("---------------------------------");
-            System.out.println("        MENÚ DE OPCIONES");
-            System.out.println("---------------------------------");
-            System.out.println("1) Agregar personas a la lista ");
-            System.out.println("2) Ver lista de personas");
-            System.out.println("3) Cargar archivo CSV de personas");
-            System.out.println("4) Buscar personas por edades");
-            System.out.println("5) Eliminar a una persona del sistema");
-            System.out.println("6) Modificar nombre a una persona");
-            System.out.println("7) Salir del menú");
-            
-            BufferedReader reader = new BufferedReader(new InputStreamReader(System.in));
-            opcion = Integer.parseInt(reader.readLine());
-            
-            switch (opcion) {
-                case 1 -> agregarPersona();
-                case 2 -> mostrarLista();
-                case 3 -> leerCSV();
-                case 4 -> buscarPorEdades();
-                case 5 -> eliminarPersona();
-                case 6 -> cambiarNombrePersona();
-                case 7 -> {
-                    System.out.println("Saliendo del menú. . .");
-                    reader.close();
+        try {
+            do {
+                System.out.println("---------------------------------");
+                System.out.println("        MENÚ DE OPCIONES");
+                System.out.println("---------------------------------");
+                System.out.println("1) Agregar personas a la lista ");
+                System.out.println("2) Ver lista de personas");
+                System.out.println("3) Cargar archivo CSV de personas");
+                System.out.println("4) Buscar personas por edades");
+                System.out.println("5) Eliminar a una persona del sistema");
+                System.out.println("6) Modificar nombre a una persona");
+                System.out.println("7) Salir del menú");
+
+                BufferedReader reader = new BufferedReader(new InputStreamReader(System.in));
+                opcion = Integer.parseInt(reader.readLine());
+
+                switch (opcion) {
+                    case 1 ->
+                        agregarPersona();
+                    case 2 ->
+                        mostrarLista();
+                    case 3 ->
+                        leerCSV();
+                    case 4 ->
+                        buscarPorEdades();
+                    case 5 ->
+                        eliminarPersona();
+                    case 6 ->
+                        cambiarNombrePersona();
+                    case 7 -> {
+                        System.out.println("Saliendo del menú. . .");
+                        reader.close();
+                    }
+                    default ->
+                        System.out.println("Opción no válida, ingrese nuevamente.");
                 }
-                default -> System.out.println("Opción no válida, ingrese nuevamente.");
-            }
-        } while(opcion != 7);
-        
-    } 
-    
+            } while (opcion != 7);
+        } catch(IllegalArgumentException e){
+            System.out.println("Ingresaste algo no válido! " + e.getMessage());
+        }
+    }
+
     /*
     Funcionalidades de ventanas con JavaFX, por favor ingresar las librerías correspondientes para que funcione correctamente
-    */
-    
-    private void abrirVentanaAgregarPersona() { 
+     */
+    private void abrirVentanaAgregarPersona() {
         Stage addStage = new Stage();
         addStage.setTitle("Agregar Persona");
 
@@ -348,22 +362,22 @@ public class RegistroCivil extends Application{
 
         Label rutLabel = new Label("RUT:");
         TextField rutField = new TextField();
-        
+
         Label diaNacLabel = new Label("Día nacimiento:");
         TextField diaNacField = new TextField();
-        
+
         Label mesNacLabel = new Label("Mes nacimiento:");
         TextField mesNacField = new TextField();
-        
+
         Label añoNacLabel = new Label("Año nacimiento:");
         TextField añoNacField = new TextField();
-        
+
         Label ciudadNacLabel = new Label("Lugar de nacimiento:");
         TextField ciudadNacField = new TextField();
-        
+
         Label comunaNacLabel = new Label("Comuna de nacimiento:");
         TextField comunaNacField = new TextField();
-        
+
         Label regionNacLabel = new Label("Región de nacimiento:");
         TextField regionNacField = new TextField();
 
@@ -373,48 +387,48 @@ public class RegistroCivil extends Application{
             String rut = rutField.getText();
 
             try {
-            int edad = Integer.parseInt(ageField.getText());
-            int dia = Integer.parseInt(diaNacField.getText());
-            int mes = Integer.parseInt(mesNacField.getText());
-            int año = Integer.parseInt(añoNacField.getText());
-            
-            if (dia < 1 || dia > 31 || mes < 1 || mes > 12 || año < 1900 || año > 2024) {
-                throw new NumberFormatException("Fecha no válida");
+                int edad = Integer.parseInt(ageField.getText());
+                int dia = Integer.parseInt(diaNacField.getText());
+                int mes = Integer.parseInt(mesNacField.getText());
+                int año = Integer.parseInt(añoNacField.getText());
+
+                if (dia < 1 || dia > 31 || mes < 1 || mes > 12 || año < 1900 || año > 2024) {
+                    throw new NumberFormatException("Fecha no válida");
+                }
+
+                Fecha fecha = new Fecha(dia, mes, año);
+
+                String ciudad = ciudadNacField.getText();
+                String comuna = comunaNacField.getText();
+                String region = regionNacField.getText();
+
+                Lugar lugar = new Lugar(ciudad, comuna, region);
+
+                Persona persona = new Persona(edad, nombre, rut, lugar, fecha);
+                personas.add(persona);
+
+                Alert alert = new Alert(Alert.AlertType.INFORMATION);
+                alert.setTitle("Persona agregada");
+                alert.setContentText("Persona agregada: " + nombre);
+                alert.showAndWait();
+
+                nameField.clear();
+                ageField.clear();
+                rutField.clear();
+                diaNacField.clear();
+                mesNacField.clear();
+                añoNacField.clear();
+                ciudadNacField.clear();
+                comunaNacField.clear();
+                regionNacField.clear();
+            } catch (NumberFormatException ex) {
+                Alert errorAlert = new Alert(Alert.AlertType.ERROR);
+                errorAlert.setTitle("Error de entrada");
+                errorAlert.setHeaderText(null);
+                errorAlert.setContentText("ERROR: Ingreso de un texto en un campo de números");
+                errorAlert.showAndWait();
             }
-            
-            Fecha fecha = new Fecha(dia, mes, año);
-            
-            String ciudad = ciudadNacField.getText();
-            String comuna = comunaNacField.getText();
-            String region = regionNacField.getText();
-            
-            Lugar lugar = new Lugar(ciudad, comuna, region);
-
-            Persona persona = new Persona(edad, nombre, rut, lugar, fecha);
-            personas.add(persona);
-
-            Alert alert = new Alert(Alert.AlertType.INFORMATION);
-            alert.setTitle("Persona agregada");
-            alert.setContentText("Persona agregada: " + nombre);
-            alert.showAndWait();
-
-            nameField.clear();
-            ageField.clear();
-            rutField.clear();
-            diaNacField.clear();
-            mesNacField.clear();
-            añoNacField.clear();
-            ciudadNacField.clear();
-            comunaNacField.clear();
-            regionNacField.clear();
-        } catch (NumberFormatException ex) {
-            Alert errorAlert = new Alert(Alert.AlertType.ERROR);
-            errorAlert.setTitle("Error de entrada");
-            errorAlert.setHeaderText(null);
-            errorAlert.setContentText("ERROR: Ingreso de un texto en un campo de números");
-            errorAlert.showAndWait();
-        }
-    });
+        });
 
         GridPane grid = new GridPane();
         grid.setVgap(10);
@@ -446,47 +460,96 @@ public class RegistroCivil extends Application{
         addStage.centerOnScreen();
         addStage.showAndWait();
     }
-    
+
     private void abrirVentanaVerPersonas() {
-    Stage viewStage = new Stage();
-    viewStage.setTitle("Lista de Personas");
+        Stage viewStage = new Stage();
+        viewStage.setTitle("Lista de Personas");
 
-    TextArea textArea = new TextArea();
-    textArea.setEditable(false);
+        TextArea textArea = new TextArea();
+        textArea.setEditable(false);
 
-    StringBuilder builder = new StringBuilder();
-    for (int i=0; i<this.personas.size(); ++i) {
-        Persona persona = (Persona)this.personas.get(i);
-        builder.append(persona.getNombre()).append(" - ").append(persona.getEdad()).append(" años\n");
+        StringBuilder builder = new StringBuilder();
+        for (int i = 0; i < this.personas.size(); ++i) {
+            Persona persona = (Persona) this.personas.get(i);
+            builder.append(persona.getNombre()).append(" - ").append(persona.getEdad()).append(" años\n");
+        }
+
+        textArea.setText(builder.toString());
+
+        Scene scene = new Scene(textArea, 600, 600);
+        viewStage.setScene(scene);
+        viewStage.initModality(Modality.APPLICATION_MODAL);
+        viewStage.setResizable(false);
+        viewStage.centerOnScreen();
+        viewStage.showAndWait();
     }
 
-    textArea.setText(builder.toString());
-
-    Scene scene = new Scene(textArea, 600, 600);
-    viewStage.setScene(scene);
-    viewStage.initModality(Modality.APPLICATION_MODAL);
-    viewStage.setResizable(false);
-    viewStage.centerOnScreen();
-    viewStage.showAndWait();
-}
-    public void abrirVentanaEliminarPersona(){
+    public void abrirVentanaEliminarPersona() {
         Stage eliminarStage = new Stage();
         eliminarStage.setTitle("Eliminar a una persona del sistema");
-        
+
         Label rutLabel = new Label("Rut: ");
-        TextField  rutField = new TextField();
+        TextField rutField = new TextField();
         Button saveButton = new Button("Guardar");
-         saveButton.setOnAction(e -> {
+        saveButton.setOnAction(e -> {
             String rut = rutField.getText();
-            if(estaPersonaEnLista(rut)){
-                mapaPersonasPorRut.remove(rut);
+            if (mapaPersonasPorRut.containsKey(rut)) {
                 Alert alert = new Alert(Alert.AlertType.INFORMATION);
+                Persona persona = (Persona) mapaPersonasPorRut.get(rut);
+                ArrayList lista = (ArrayList) mapaPersonasPorEdad.get(persona.getEdad());
+                for (int i = 0; i < lista.size(); ++i) {
+                    Persona person = (Persona) lista.get(i);
+                    if (person.getRut().equals(rut)) {
+                        lista.remove(i);
+                        break;
+                    }
+                }
+                for (int j = 0; j < personas.size(); ++j) {
+                    Persona person = (Persona) personas.get(j);
+                    if (person.getRut().equals(rut)) {
+                        personas.remove(j);
+                        break;
+                    }
+                }
+                if (persona.getEdad() < 18) {
+                    for (int i = 0; i < personasMenoresEdad.size(); ++i) {
+                        Persona p = (Persona) personasMenoresEdad.get(i);
+                        if (p.getRut().equals(rut)) {
+                            personasMenoresEdad.remove(i);
+                            break;
+                        }
+                    }
+                } else if (persona.getEdad() < 65) {
+                    for (int i = 0; i < personasMayoresEdad.size(); ++i) {
+                        Persona p = (Persona) personasMayoresEdad.get(i);
+                        if (p.getRut().equals(rut)) {
+                            personasMayoresEdad.remove(i);
+                            break;
+                        }
+                    }
+                } else {
+                    for (int i = 0; i < personasAdultosMayores.size(); ++i) {
+                        Persona p = (Persona) personasAdultosMayores.get(i);
+                        if (p.getRut().equals(rut)) {
+                            personasAdultosMayores.remove(i);
+                            break;
+                        }
+                    }
+                }
+                mapaPersonasPorRut.remove(rut);
                 alert.setTitle("Persona eliminada");
                 alert.setHeaderText(null);
-                alert.setContentText("Persona con RUT: " + rut + "eliminada exitosamente del sistema");
+                alert.setContentText("Persona se ha eliminado del sistema exitosamente!");
+                alert.showAndWait();
+            } else {
+                Alert alert = new Alert(Alert.AlertType.INFORMATION);
+                alert.setTitle("Persona no encontrada en el sistema");
+                alert.setHeaderText(null);
+                alert.setContentText("Persona no se ha registrado en el sistema o no existe");
                 alert.showAndWait();
             }
         });
+
         GridPane grid = new GridPane();
         grid.setVgap(10);
         grid.setHgap(10);
@@ -500,9 +563,13 @@ public class RegistroCivil extends Application{
         eliminarStage.centerOnScreen();
         eliminarStage.showAndWait();
     }
-    
+
     public void start(Stage primaryStage) {
+        
         registrarPersonas();
+        manejarListasEdades();
+        manejarMapas();
+        
         primaryStage.setTitle("Gestión de Registro Civil");
 
         Button addButton = new Button("Agregar Persona");
@@ -529,23 +596,23 @@ public class RegistroCivil extends Application{
         primaryStage.centerOnScreen();
         primaryStage.show();
     }
-    
-     public void excear() {
-            archivoExcel.escribirExcel(personas);
-            System.out.println("Datos escritos en el archivo exitosamente.");
-    } 
-        public static void main(String args[]) throws IOException{
-        
+
+    public void excear() {
+        archivoExcel.escribirExcel(personas);
+        System.out.println("Datos escritos en el archivo exitosamente.");
+    }
+
+    public static void main(String args[]) throws IOException {
 
         RegistroCivil regCivil = new RegistroCivil();
-        
+
         regCivil.registrarPersonas();
         regCivil.manejarListasEdades();
         regCivil.manejarMapas();
         regCivil.mostrarMenuConsola();
         regCivil.excear();
-        
+
         launch(args);
-        
+
     }
 }
