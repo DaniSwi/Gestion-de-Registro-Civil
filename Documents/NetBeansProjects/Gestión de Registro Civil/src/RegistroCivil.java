@@ -7,6 +7,8 @@ import javafx.scene.control.*;
 import javafx.scene.layout.GridPane;
 import javafx.stage.Modality;
 import javafx.stage.Stage;
+import java.time.LocalDate;
+import javax.swing.JFrame;
 
 /*
 Por favor, antes de ejecutar el programa asegúrese de que las librerías con los archivos de JavaFX y Apache POI estén en su IDE.
@@ -21,6 +23,7 @@ public class RegistroCivil extends Application {
     private HashMap mapaPersonasPorEdad = new HashMap();
     private HashMap mapaPersonasPorRut = new HashMap();
     private Excel archivoExcel = new Excel();
+    private HashMap mapaClientes = new HashMap();
 
     public void registrarPersonas() {
         Persona p1 = new Persona(99, "Sara", "23357956-1", new Lugar("Puerto Montt", "Ovalle", "Antofagasta"), new Fecha(9, 3, 1969));
@@ -96,9 +99,7 @@ public class RegistroCivil extends Application {
                 lista.add(persona);
                 mapaPersonasPorEdad.put(persona.getEdad(), lista);
             }
-            if (mapaPersonasPorRut.containsKey(persona.getRut())) {
-                System.out.println("Persona ya ingresa en el sistema!");
-            } else {
+            if (!mapaPersonasPorRut.containsKey(persona.getRut())) {
                 mapaPersonasPorRut.put(persona.getRut(), persona);
             }
         }
@@ -127,11 +128,33 @@ public class RegistroCivil extends Application {
         String comuna = reader.readLine();
         System.out.println("Región de nacimiento: ");
         String region = reader.readLine();
-        Lugar lugar = new Lugar(ciudad, comuna, region);
 
+        Lugar lugar = new Lugar(ciudad, comuna, region);
         Persona persona = new Persona(edad, nombre, rut, lugar, fecha);
         personas.add(persona);
+
         System.out.println("Persona " + persona.getNombre() + " agregada correctamente!");
+
+        if (mapaPersonasPorEdad.containsKey(persona.getEdad())) {
+            ArrayList lista = (ArrayList) mapaPersonasPorEdad.get(persona.getEdad());
+            lista.add(persona);
+        } else {
+            ArrayList lista = new ArrayList();
+            lista.add(persona);
+            mapaPersonasPorEdad.put(persona.getEdad(), lista);
+        }
+        if (!mapaPersonasPorRut.containsKey(persona.getRut())) {
+            mapaPersonasPorRut.put(persona.getRut(), persona);
+        }
+
+        if (persona.getEdad() < 18) {
+            personasMenoresEdad.add(persona);
+        } else if (persona.getEdad() >= 18 && persona.getEdad() < 65) {
+            personasMayoresEdad.add(persona);
+        } else {
+            personasAdultosMayores.add(persona);
+        }
+
     }
 
     public void buscarPorEdades() throws IOException { //Busca en el sistema personas con la edad solicitada.
@@ -342,7 +365,7 @@ public class RegistroCivil extends Application {
                         System.out.println("Opción no válida, ingrese nuevamente.");
                 }
             } while (opcion != 7);
-        } catch(IllegalArgumentException e){
+        } catch (IllegalArgumentException e) {
             System.out.println("Ingresaste algo no válido! " + e.getMessage());
         }
     }
@@ -494,7 +517,6 @@ public class RegistroCivil extends Application {
         saveButton.setOnAction(e -> {
             String rut = rutField.getText();
             if (mapaPersonasPorRut.containsKey(rut)) {
-                Alert alert = new Alert(Alert.AlertType.INFORMATION);
                 Persona persona = (Persona) mapaPersonasPorRut.get(rut);
                 ArrayList lista = (ArrayList) mapaPersonasPorEdad.get(persona.getEdad());
                 for (int i = 0; i < lista.size(); ++i) {
@@ -537,15 +559,16 @@ public class RegistroCivil extends Application {
                     }
                 }
                 mapaPersonasPorRut.remove(rut);
+                Alert alert = new Alert(Alert.AlertType.CONFIRMATION);
                 alert.setTitle("Persona eliminada");
                 alert.setHeaderText(null);
                 alert.setContentText("Persona se ha eliminado del sistema exitosamente!");
                 alert.showAndWait();
             } else {
-                Alert alert = new Alert(Alert.AlertType.INFORMATION);
+                Alert alert = new Alert(Alert.AlertType.ERROR);
                 alert.setTitle("Persona no encontrada en el sistema");
                 alert.setHeaderText(null);
-                alert.setContentText("Persona no se ha registrado en el sistema o no existe");
+                alert.setContentText("Persona no se ha registrado en el sistema o no existe!");
                 alert.showAndWait();
             }
         });
@@ -564,22 +587,147 @@ public class RegistroCivil extends Application {
         eliminarStage.showAndWait();
     }
 
-    public void start(Stage primaryStage) {
+    public void vaciarCSV() {
+        try (FileWriter writer = new FileWriter("output.csv", false)) {
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
+    }
+
+    public void abrirVentanaGenerarCSV() {
+        vaciarCSV();
+        Stage csvStage = new Stage();
+        csvStage.setTitle("Generar archivo CSV");
+        Button generateButton = new Button("Generar");
+        generateButton.setOnAction(e -> {
+            try (BufferedWriter writer = new BufferedWriter(new FileWriter("output.csv"))) {
+                writer.write("Nombre,Rut,Edad");
+                writer.newLine();
+                for (int i = 0; i < personas.size(); ++i) {
+                    Persona p = (Persona) personas.get(i);
+                    writer.write(p.getNombre() + "," + p.getRut() + "," + p.getEdad());
+                    writer.newLine();
+                }
+                Alert alert = new Alert(Alert.AlertType.CONFIRMATION);
+                alert.setTitle("Archivo generado");
+                alert.setHeaderText(null);
+                alert.setContentText("Archivo *output.csv* generado correctamente!");
+                alert.showAndWait();
+            } catch (IOException r) {
+                Alert alert = new Alert(Alert.AlertType.ERROR);
+                alert.setTitle("Error al generar archivo");
+                alert.setHeaderText(null);
+                alert.setContentText("Archivo no ha podido ser generado");
+                alert.showAndWait();
+            }
+        });
+        GridPane grid = new GridPane();
+        grid.setVgap(10);
+        grid.setHgap(10);
+        grid.add(generateButton, 1, 2);
+        Scene scene = new Scene(grid, 200, 200);
+        csvStage.setScene(scene);
+        csvStage.initModality(Modality.APPLICATION_MODAL);
+        csvStage.setResizable(false);
+        csvStage.centerOnScreen();
+        csvStage.showAndWait();
+    }
+    
+    public void gestionarPasaporte(Cliente c){
+        LocalDate fechaActual = LocalDate.now();
+        Fecha fechaHoy = new Fecha(fechaActual.getDayOfMonth(), fechaActual.getMonthValue(), fechaActual.getYear());
+        LocalDate fechaCaducidad = fechaActual.plusYears(10);
+        Fecha fechaVencimiento = new Fecha(fechaCaducidad.getDayOfMonth(), fechaCaducidad.getMonthValue(), fechaCaducidad.getYear());
+        Pasaporte pas = new Pasaporte(c, c.getLugarNacimiento(), c.getFechaNacimiento(), fechaHoy, fechaVencimiento);
+        c.setPasaporte(pas);
+    }
+
+    public void gestionarViajeCliente() {
+        Stage viajeStage = new Stage();
+        viajeStage.setTitle("Gestionar viaje a cliente");
+        Label rutLabel = new Label("Rut del cliente: ");
+        TextField rutField = new TextField();
+        Button saveButton = new Button("Guardar");
+        saveButton.setOnAction(e -> {
+            String rut = rutField.getText();
+            if(mapaPersonasPorRut.containsKey(rut)){
+                Alert alert = new Alert(Alert.AlertType.CONFIRMATION);
+                alert.setTitle("Antecedentes");
+                alert.setHeaderText("Consulta de Antecedentes");
+                alert.setContentText("¿El cliente tiene antecedentes?");
+                ButtonType buttonSi = new ButtonType("Sí");
+                ButtonType buttonNo = new ButtonType("No");
+                alert.getButtonTypes().setAll(buttonSi, buttonNo);
+                Optional<ButtonType> result = alert.showAndWait();
+                 if (result.isPresent() && result.get() == buttonSi) {
+                     Alert alerta = new Alert(Alert.AlertType.WARNING);
+                     alerta.setTitle("Cliente con antecedentes");
+                     alerta.setHeaderText(null);
+                     alerta.setContentText("Cliente con antecedentes criminales, no podrá crearse el pasaporte");
+                     alerta.showAndWait();
+                     Persona persona = (Persona) mapaPersonasPorRut.get(rut);
+                     Cliente cliente = new Cliente(persona.getEdad(), persona.getNombre(), rut, persona.getLugarNacimiento(), persona.getFechaNacimiento(), true);
+                     mapaClientes.put(rut, cliente);
+                 } else {
+                     Persona persona = (Persona) mapaPersonasPorRut.get(rut);
+                     Cliente cliente = new Cliente(persona.getEdad(), persona.getNombre(), rut, persona.getLugarNacimiento(), persona.getFechaNacimiento(), false);
+                     gestionarPasaporte(cliente);
+                     Alert alerta = new Alert(Alert.AlertType.CONFIRMATION);
+                     alerta.setTitle("Pasaporte creado");
+                     alert.setHeaderText(null);
+                     alerta.setContentText("Pasaporte del clente creado!");
+                     alerta.showAndWait();
+                     mapaClientes.put(rut, cliente);
+                 }
+            } else {
+                Alert alert = new Alert(Alert.AlertType.ERROR);
+                alert.setTitle("Persona no encontrada");
+                alert.setHeaderText(null);
+                alert.setContentText("Persona no ha sido encontrada en el sistema");
+                alert.showAndWait();
+            }
+        });
         
+        GridPane grid = new GridPane();
+        grid.setVgap(10);
+        grid.setHgap(10);
+        grid.add(rutLabel, 0, 0);
+        grid.add(rutField, 1, 0);
+        grid.add(saveButton, 1, 2);
+        Scene scene = new Scene(grid, 600, 600);
+        viajeStage.setScene(scene);
+        viajeStage.initModality(Modality.APPLICATION_MODAL);
+        viajeStage.setResizable(false);
+        viajeStage.centerOnScreen();
+        viajeStage.showAndWait();
+    }
+    
+    public void crearGraficos(){
+        Grafico grafico = new Grafico(personasMenoresEdad, personasMayoresEdad, personasAdultosMayores);
+    }
+
+    public void start(Stage primaryStage) {
+
         registrarPersonas();
         manejarListasEdades();
         manejarMapas();
-        
+
         primaryStage.setTitle("Gestión de Registro Civil");
 
         Button addButton = new Button("Agregar Persona");
         Button viewButton = new Button("Ver Lista de Personas");
         Button deleteButton = new Button("Eliminar a una persona");
+        Button generateCSVButton = new Button("Generar CSV de las personas");
+        Button crearPasaporteButton = new Button("Crear pasaporte cliente");
+        Button crearGraficoButton = new Button("Crear gráfico datos");
         Button exitButton = new Button("Salir");
 
         addButton.setOnAction(e -> abrirVentanaAgregarPersona());
         viewButton.setOnAction(e -> abrirVentanaVerPersonas());
         deleteButton.setOnAction(e -> abrirVentanaEliminarPersona());
+        generateCSVButton.setOnAction(e -> abrirVentanaGenerarCSV());
+        crearPasaporteButton.setOnAction(e -> gestionarViajeCliente());
+        crearGraficoButton.setOnAction(e -> crearGraficos());
         exitButton.setOnAction(e -> primaryStage.close());
 
         GridPane grid = new GridPane();
@@ -588,7 +736,10 @@ public class RegistroCivil extends Application {
         grid.add(addButton, 0, 0);
         grid.add(viewButton, 1, 0);
         grid.add(deleteButton, 2, 0);
-        grid.add(exitButton, 3, 0);
+        grid.add(generateCSVButton, 0, 1);
+        grid.add(crearPasaporteButton, 1, 1);
+        grid.add(crearGraficoButton, 2, 1);
+        grid.add(exitButton, 4, 4);
 
         Scene scene = new Scene(grid, 600, 200);
         primaryStage.setScene(scene);
