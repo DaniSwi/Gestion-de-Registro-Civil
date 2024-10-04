@@ -22,7 +22,7 @@ public class Grafico extends JFrame {
                     GraficoBarra graficoBarra = new GraficoBarra(menoresEdad, mayoresEdad, adultosMayores);
                     graficoBarra.setSize(800, 600);
                     graficoBarra.setLocationRelativeTo(null);
-                    graficoBarra.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
+                    graficoBarra.setDefaultCloseOperation(JFrame.DISPOSE_ON_CLOSE);
                     graficoBarra.setVisible(true);
                     break;
 
@@ -31,7 +31,7 @@ public class Grafico extends JFrame {
                     GraficoTorta graficoTorta = new GraficoTorta(menoresEdad, mayoresEdad, adultosMayores);
                     graficoTorta.setSize(800, 600);
                     graficoTorta.setLocationRelativeTo(null);
-                    graficoTorta.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
+                    graficoTorta.setDefaultCloseOperation(JFrame.DISPOSE_ON_CLOSE);
                     graficoTorta.setVisible(true);
                     break;
 
@@ -40,7 +40,7 @@ public class Grafico extends JFrame {
                     GraficoLineas graficoLinea = new GraficoLineas(menoresEdad, mayoresEdad, adultosMayores);
                     graficoLinea.setSize(800, 600);
                     graficoLinea.setLocationRelativeTo(null);
-                    graficoLinea.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
+                    graficoLinea.setDefaultCloseOperation(JFrame.DISPOSE_ON_CLOSE);
                     graficoLinea.setVisible(true);
                     break;
         }

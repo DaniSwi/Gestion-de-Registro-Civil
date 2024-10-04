@@ -176,6 +176,13 @@ public class RegistroCivil extends Application {
         BufferedReader reader = new BufferedReader(new InputStreamReader(System.in));
         System.out.println("Ingrese RUT para buscar: ");
         String rut = reader.readLine();
+        try {
+            if(validarRut(rut)){
+                System.out.println("Validación exitosa");
+            }
+        } catch(InvalidRutException e){
+            System.out.println("Error de validación del rut");
+        }
         if (mapaPersonasPorRut.containsKey(rut)) {
             Persona persona = (Persona) mapaPersonasPorRut.get(rut);
             persona.presentarse();
@@ -325,6 +332,21 @@ public class RegistroCivil extends Application {
             System.out.println("Persona no encontrada en el sistema!");
         }
     }
+    
+    public boolean validarRut(String rut) throws InvalidRutException {
+        rut = rut.replace(".","").replace("-", "");
+        if(rut.length() < 8 || rut.length() > 9){
+            throw new InvalidRutException("Rut inválido, debe tener entre 8 y 9 caracteres");
+        }
+        return true;
+    }
+    
+    public boolean validarEdad(int edad) throws UnsupportedEdadException {
+        if(edad < 0 || edad > 120){
+            throw new UnsupportedEdadException("Edad no válida");
+        }
+        return true;
+    }
 
     public void mostrarMenuConsola() throws IOException { //Muestra las opciones en consola.
         int opcion;
@@ -339,7 +361,8 @@ public class RegistroCivil extends Application {
                 System.out.println("4) Buscar personas por edades");
                 System.out.println("5) Eliminar a una persona del sistema");
                 System.out.println("6) Modificar nombre a una persona");
-                System.out.println("7) Salir del menú");
+                System.out.println("7) Buscar por rut");
+                System.out.println("8) Salir del menú");
 
                 BufferedReader reader = new BufferedReader(new InputStreamReader(System.in));
                 opcion = Integer.parseInt(reader.readLine());
@@ -357,14 +380,16 @@ public class RegistroCivil extends Application {
                         eliminarPersona();
                     case 6 ->
                         cambiarNombrePersona();
-                    case 7 -> {
+                    case 7 ->
+                        buscarPorRut();
+                    case 8 -> {
                         System.out.println("Saliendo del menú. . .");
                         reader.close();
                     }
                     default ->
                         System.out.println("Opción no válida, ingrese nuevamente.");
                 }
-            } while (opcion != 7);
+            } while (opcion != 8);
         } catch (IllegalArgumentException e) {
             System.out.println("Ingresaste algo no válido! " + e.getMessage());
         }
@@ -387,7 +412,7 @@ public class RegistroCivil extends Application {
         TextField rutField = new TextField();
 
         Label diaNacLabel = new Label("Día nacimiento:");
-        TextField diaNacField = new TextField();
+        TextField diaNacField = new TextField(); 
 
         Label mesNacLabel = new Label("Mes nacimiento:");
         TextField mesNacField = new TextField();
@@ -403,6 +428,12 @@ public class RegistroCivil extends Application {
 
         Label regionNacLabel = new Label("Región de nacimiento:");
         TextField regionNacField = new TextField();
+        
+        Button backButton = new Button("Volver");
+        backButton.setOnAction(e -> {
+            Stage stage = (Stage) backButton.getScene().getWindow();
+            stage.close();
+        });
 
         Button saveButton = new Button("Guardar");
         saveButton.setOnAction(e -> {
@@ -475,6 +506,7 @@ public class RegistroCivil extends Application {
         grid.add(regionNacLabel, 0, 8);
         grid.add(regionNacField, 1, 8);
         grid.add(saveButton, 1, 9);
+         grid.add(backButton, 1, 10);
 
         Scene scene = new Scene(grid, 600, 600);
         addStage.setScene(scene);
@@ -648,6 +680,11 @@ public class RegistroCivil extends Application {
         Label rutLabel = new Label("Rut del cliente: ");
         TextField rutField = new TextField();
         Button saveButton = new Button("Guardar");
+        Button backButton = new Button("Volver");
+        backButton.setOnAction(e -> {
+            Stage stage = (Stage) backButton.getScene().getWindow();
+            stage.close(); // Cierra la ventana actual
+        });
         saveButton.setOnAction(e -> {
             String rut = rutField.getText();
             if(mapaPersonasPorRut.containsKey(rut)){
@@ -694,6 +731,7 @@ public class RegistroCivil extends Application {
         grid.add(rutLabel, 0, 0);
         grid.add(rutField, 1, 0);
         grid.add(saveButton, 1, 2);
+        grid.add(backButton, 1, 3);
         Scene scene = new Scene(grid, 600, 600);
         viajeStage.setScene(scene);
         viajeStage.initModality(Modality.APPLICATION_MODAL);
@@ -739,7 +777,7 @@ public class RegistroCivil extends Application {
         grid.add(generateCSVButton, 0, 1);
         grid.add(crearPasaporteButton, 1, 1);
         grid.add(crearGraficoButton, 2, 1);
-        grid.add(exitButton, 4, 4);
+        grid.add(exitButton, 4, 5);
 
         Scene scene = new Scene(grid, 600, 200);
         primaryStage.setScene(scene);
@@ -767,3 +805,7 @@ public class RegistroCivil extends Application {
 
     }
 }
+
+//Solucionar menu ventanas (centrar más los botones)
+//Volver para atrás menú
+//bug graficos! solucionado wa
