@@ -80,8 +80,10 @@ public class Persona {
         System.out.println("Hola me llamo " + this.nombre + ", tengo " + this.edad + " años, naci en " + lugarNacimiento.mostrarLugar());
     }
     
-    public String presentarse(int n) {
-        return nombre + " - " + edad + "años.\n";
+    public String presentarse(char c) {
+        if(c == 'C') return nombre + "," + rut + "," + edad; 
+        else if(c == 'A')return nombre + " - " + edad + " años.\n";
+        else return nombre + rut + edad;
     }
     
     public boolean esMayorEdad(){

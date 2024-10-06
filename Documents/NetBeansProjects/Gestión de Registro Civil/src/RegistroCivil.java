@@ -504,7 +504,7 @@ public class RegistroCivil extends Application {
         grid.add(regionNacLabel, 0, 8);
         grid.add(regionNacField, 1, 8);
         grid.add(saveButton, 1, 9);
-         grid.add(backButton, 1, 10);
+        grid.add(backButton, 1, 10);
 
         Scene scene = new Scene(grid, 600, 600);
         addStage.setScene(scene);
@@ -524,7 +524,7 @@ public class RegistroCivil extends Application {
         StringBuilder builder = new StringBuilder();
         for (int i = 0; i < this.personas.size(); ++i) {
             Persona persona = (Persona) this.personas.get(i);
-            builder.append(persona.presentarse(1));
+            builder.append(persona.presentarse('A'));
         }
 
         textArea.setText(builder.toString());
@@ -635,7 +635,7 @@ public class RegistroCivil extends Application {
                 writer.newLine();
                 for (int i = 0; i < personas.size(); ++i) {
                     Persona p = (Persona) personas.get(i);
-                    writer.write(p.getNombre() + "," + p.getRut() + "," + p.getEdad());
+                    writer.write(p.presentarse('C'));
                     writer.newLine();
                 }
                 Alert alert = new Alert(Alert.AlertType.CONFIRMATION);
