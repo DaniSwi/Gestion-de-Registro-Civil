@@ -1,4 +1,3 @@
-
 import java.util.*;
 import java.io.*;
 import javafx.application.Application;
@@ -8,7 +7,6 @@ import javafx.scene.layout.GridPane;
 import javafx.stage.Modality;
 import javafx.stage.Stage;
 import java.time.LocalDate;
-import javax.swing.JFrame;
 
 /*
 Por favor, antes de ejecutar el programa asegúrese de que las librerías con los archivos de JavaFX y Apache POI estén en su IDE.
