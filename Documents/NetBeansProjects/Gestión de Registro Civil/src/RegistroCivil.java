@@ -524,7 +524,7 @@ public class RegistroCivil extends Application {
         StringBuilder builder = new StringBuilder();
         for (int i = 0; i < this.personas.size(); ++i) {
             Persona persona = (Persona) this.personas.get(i);
-            builder.append(persona.getNombre()).append(" - ").append(persona.getEdad()).append(" años\n");
+            builder.append(persona.presentarse(1));
         }
 
         textArea.setText(builder.toString());
