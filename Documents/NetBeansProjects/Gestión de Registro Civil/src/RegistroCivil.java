@@ -356,7 +356,7 @@ public class RegistroCivil extends Application {
                 System.out.println("1) Agregar personas a la lista ");
                 System.out.println("2) Ver lista de personas");
                 System.out.println("3) Cargar archivo CSV de personas");
-                System.out.println("4) Buscar personas por edades");
+                System.out.println("4) Buscar personas por edad");
                 System.out.println("5) Eliminar a una persona del sistema");
                 System.out.println("6) Modificar nombre a una persona");
                 System.out.println("7) Buscar por rut");
@@ -396,7 +396,7 @@ public class RegistroCivil extends Application {
     /*
     Funcionalidades de ventanas con JavaFX, por favor ingresar las librerías correspondientes para que funcione correctamente
      */
-    private void abrirVentanaAgregarPersona() {
+    private void abrirVentanaAgregarPersona() throws UnsupportedFechaException {
         Stage addStage = new Stage();
         addStage.setTitle("Agregar Persona");
 
@@ -445,7 +445,7 @@ public class RegistroCivil extends Application {
                 int año = Integer.parseInt(añoNacField.getText());
 
                 if (dia < 1 || dia > 31 || mes < 1 || mes > 12 || año < 1900 || año > 2024) {
-                    throw new NumberFormatException("Fecha no válida");
+                    throw new UnsupportedFechaException("Fecha no válida");
                 }
 
                 Fecha fecha = new Fecha(dia, mes, año);
@@ -473,13 +473,13 @@ public class RegistroCivil extends Application {
                 ciudadNacField.clear();
                 comunaNacField.clear();
                 regionNacField.clear();
-            } catch (NumberFormatException ex) {
+            } catch (UnsupportedFechaException ex) {
                 Alert errorAlert = new Alert(Alert.AlertType.ERROR);
                 errorAlert.setTitle("Error de entrada");
                 errorAlert.setHeaderText(null);
                 errorAlert.setContentText("ERROR: Ingreso de un texto en un campo de números");
                 errorAlert.showAndWait();
-            }
+            }   
         });
 
         GridPane grid = new GridPane();
