@@ -6,4 +6,4 @@
 
 Puedes ver el siguiente video para aprender cómo descargar las librerías necesarias:
 
-[![Ver el tutorial aquí](https://img.youtube.com/vi/TU_VIDEO_ID/maxresdefault.jpg)](https://www.youtube.com/watch?v=TU_VIDEO_ID)
+[![Ver el tutorial aquí]([https://img.youtube.com/vi/TU_VIDEO_ID/maxresdefault.jpg)](https://www.youtube.com/watch?v=TU_VIDEO_ID](https://www.youtube.com/watch?v=IjFnuzCS890))
