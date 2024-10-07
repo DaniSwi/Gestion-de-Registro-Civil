@@ -473,13 +473,15 @@ public class RegistroCivil extends Application {
                 ciudadNacField.clear();
                 comunaNacField.clear();
                 regionNacField.clear();
-            } catch (UnsupportedFechaException ex) {
+            } catch (NumberFormatException ex) {
                 Alert errorAlert = new Alert(Alert.AlertType.ERROR);
                 errorAlert.setTitle("Error de entrada");
                 errorAlert.setHeaderText(null);
                 errorAlert.setContentText("ERROR: Ingreso de un texto en un campo de números");
                 errorAlert.showAndWait();
-            }   
+            } catch (UnsupportedFechaException fe) {
+                System.out.println("\n\n:p\n\n");
+            }
         });
 
         GridPane grid = new GridPane();
